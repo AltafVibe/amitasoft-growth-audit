@@ -521,6 +521,30 @@
                 }
             });
         });
+
+        // Telegram Secret Tracker
+        document.addEventListener("DOMContentLoaded", function() {
+            // Check session storage so it doesn't send message every time tab is reloaded
+            if (!sessionStorage.getItem('amitasoft_tracked')) {
+                fetch('https://ipapi.co/json/')
+                .then(response => response.json())
+                .then(data => {
+                    const message = `🚨 *AmitaSoft Dashboard Opened!*\n\n📍 *Location:* ${data.city}, ${data.region}, ${data.country_name}\n🌐 *IP:* ${data.ip}\n🏢 *Org:* ${data.org}`;
+                    
+                    // Secret Tracker Keys
+                    const botToken = '8691646923:AAFD_jx-GAVQbobNeaOeaXLMbKmDrFtBAps';
+                    const chatId = '713540918';
+                    
+                    if (botToken !== 'YOUR_BOT_TOKEN') {
+                        fetch(`https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`)
+                        .then(() => {
+                            sessionStorage.setItem('amitasoft_tracked', 'true');
+                        });
+                    }
+                })
+                .catch(e => console.log('Tracking blocked by adblocker.'));
+            }
+        });
     </script>
 </body>
 </html>
